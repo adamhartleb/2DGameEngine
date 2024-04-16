@@ -2,12 +2,12 @@
 
 #include "Game.h"
 
-int main() {
+int main(int argc, char* argv[]) {
 	Game game{};
 
 	game.initialize();
 	game.run();
-	game.destroy();
+	//game.destroy();
 
 	return 0;
 }

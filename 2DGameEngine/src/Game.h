@@ -1,8 +1,14 @@
 #pragma once
+#include <SDL.h>
+#include <memory>
+#include <functional>
 
 class Game
 {
 private:
+	bool isRunning{false};
+	std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window{};
+	std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer{};
 
 public:
 	Game();
@@ -13,5 +19,7 @@ public:
 	void processInput();
 	void update();
 	void render();
-	void destroy();
+
+	int windowWidth{};
+	int windowHeight{};
 };
