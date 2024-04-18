@@ -2,9 +2,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Game.h"
+#include <glm/glm.hpp>
 #include <memory>
 #include <functional>
-
+#include <chrono>
 
 Game::Game()
 {
@@ -92,14 +93,22 @@ void Game::processInput()
 	}
 }
 
-void Game::setup()
-{
+glm::vec2 playerPosition{10.0, 20.0};
+glm::vec2 playerVelocity{1.0, 0.0};
 
-}
+//void Game::setup()
+//{
+//	playerPosition = glm::vec2( 10.0, 20.0 );
+//	playerVelocity = glm::vec2( 1.0, 0.0 );
+//}
 
 void Game::update()
 {
+	auto timeout{ SDL_GetTicks() + TARGET_FRAME_TIME };
+	while (!SDL_TICKS_PASSED(SDL_GetTicks(), timeout));
 
+	playerPosition.x += playerVelocity.x;
+	playerPosition.y += playerVelocity.y;
 }
 void Game::render()
 {
@@ -117,7 +126,12 @@ void Game::render()
 		SDL_DestroyTexture
 	)};
 
-	SDL_Rect dstRect{10, 10, 32, 32};
+	SDL_Rect dstRect{
+		static_cast<int>(playerPosition.x), 
+		static_cast<int>(playerPosition.y), 
+		32, 
+		32
+	};
 	SDL_RenderCopy(sdlRenderer, texture.get(), nullptr, &dstRect);
 
 	SDL_RenderPresent(sdlRenderer);

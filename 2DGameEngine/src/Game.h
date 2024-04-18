@@ -3,6 +3,9 @@
 #include <memory>
 #include <functional>
 
+constexpr auto FPS {60};
+constexpr auto TARGET_FRAME_TIME{ 1000 / FPS };
+
 class Game
 {
 private:
