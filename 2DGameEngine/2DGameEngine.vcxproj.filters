@@ -780,6 +780,9 @@
     <ClInclude Include="src\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libs\glm\detail\func_common.inl">
@@ -1183,6 +1186,7 @@
     <None Include="SDL2.dll" />
     <None Include="SDL2_image.dll" />
     <None Include="SDL2_mixer.dll" />
+    <None Include="libs\glm\LICENSE" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libs\glm\detail\glm.cpp">
@@ -1209,5 +1213,11 @@
     <ClCompile Include="src\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\liblua54.a" />
   </ItemGroup>
 </Project>

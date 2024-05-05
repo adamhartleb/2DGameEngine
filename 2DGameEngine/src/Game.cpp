@@ -1,19 +1,19 @@
-#include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Game.h"
 #include <glm/glm.hpp>
 #include <memory>
-#include <functional>
-#include <chrono>
+
+#include "Logger.h"
 
 Game::Game()
 {
-	std::cout << "we out here!" << "\n";
+	Logger::Log("Game constructor was called!");
 }
 
 Game::~Game()
 {
+	Logger::Log("Game destructor was called!");
 	SDL_Quit();
 }
 
@@ -21,7 +21,7 @@ void Game::initialize()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) 
 	{
-		std::cerr << "Error initializing SDL" << std::endl;
+		Logger::Err("Error initializing SDL");
 		return;
 	}
 
@@ -45,7 +45,7 @@ void Game::initialize()
 
 	if (window == nullptr) 
 	{
-		std::cerr << "Error creating SDL Window" << std::endl;
+		Logger::Err("Error creating SDL Window");
 		return;
 	}
 
@@ -56,7 +56,7 @@ void Game::initialize()
 
 	if (renderer == nullptr) 
 	{
-		std::cerr << "Error creating SDL Window" << std::endl;
+		Logger::Err("Error creating SDL Window");
 		return;
 	}
 
@@ -94,7 +94,7 @@ void Game::processInput()
 }
 
 glm::vec2 playerPosition{10.0, 20.0};
-glm::vec2 playerVelocity{1.0, 0.0};
+glm::vec2 playerVelocity{20.0, 0.0};
 
 //void Game::setup()
 //{
@@ -104,11 +104,21 @@ glm::vec2 playerVelocity{1.0, 0.0};
 
 void Game::update()
 {
-	auto timeout{ SDL_GetTicks() + TARGET_FRAME_TIME };
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(), timeout));
+	int timeToWait = TARGET_FRAME_TIME - (SDL_GetTicks() - previousFrameTimeMS);
+	if (timeToWait > 0 && timeToWait <= TARGET_FRAME_TIME) 
+	{
+		SDL_Delay(timeToWait);
+	}
 
-	playerPosition.x += playerVelocity.x;
-	playerPosition.y += playerVelocity.y;
+	// Get how much time has passed from the previous frame in milliseconds.
+	// We can then multiple the player velocity by the deltaTime to go from pixels per frame to pixels per second so our
+	// physics isn't tied to the framerate. 
+	double deltaTime = (SDL_GetTicks() - previousFrameTimeMS) / 1000.0;
+
+	previousFrameTimeMS = SDL_GetTicks();
+
+	playerPosition.x += playerVelocity.x * deltaTime;
+	playerPosition.y += playerVelocity.y * deltaTime;
 }
 void Game::render()
 {
