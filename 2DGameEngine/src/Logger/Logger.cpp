@@ -1,15 +1,21 @@
 #include <iomanip>
 #include <iostream>
-#include <Windows.h>
+#include <format>
+
 #include "Logger.h"
 
-HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+HANDLE Logger::hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+std::vector<LogEntry> Logger::messages{};
 
 void Logger::Log(std::string_view message)
 {
 	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
 
-	std::cout << "[ " << getLocalTimeString() << " ] " << message << "\n";
+	LogEntry log{ LogType::INFO };
+	log.message = std::format("LOG: [ {} ]", getLocalTimeString());
+
+	std::cout << log.message << "\n";
+	messages.push_back(log);
 
 	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE);
 }
@@ -18,7 +24,11 @@ void Logger::Err(std::string_view message)
 {
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 
-	std::cerr << "[ " << getLocalTimeString() << " ] " << message << "\n";
+	LogEntry log{ LogType::ERR };
+	log.message = std::format("ERR: [ {} ]", getLocalTimeString());
+
+	std::cerr << log.message << "\n";
+	messages.push_back(log);
 
 	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE);
 }
@@ -33,9 +43,7 @@ std::string Logger::getLocalTimeString(void)
 
 	localtime_s(&localTime, &result);
 
-	const auto localTimeC = localTime;
-
-	std::strftime(buffer, bufferSize, "%d/%m/%Y %H:%M:%S", &localTimeC);
+	std::strftime(buffer, bufferSize, "%d/%m/%Y %H:%M:%S", static_cast<const std::tm*>(&localTime));
 
 	return std::string(buffer);
 }

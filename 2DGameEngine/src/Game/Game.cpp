@@ -1,10 +1,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
-#include "Game.h"
 #include <glm/glm.hpp>
 #include <memory>
 
-#include "Logger.h"
+#include "Game.h"
+#include "../Logger/Logger.h"
 
 Game::Game()
 {
