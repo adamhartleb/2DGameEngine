@@ -4,6 +4,10 @@
 #include <memory>
 
 #include "Game.h"
+#include "../ECS/Component.h"
+#include "../ECS/Entity.h"
+#include "../ECS/Registry.h"
+#include "../ECS/System.h"
 #include "../Logger/Logger.h"
 
 Game::Game()
@@ -93,14 +97,10 @@ void Game::processInput()
 	}
 }
 
-glm::vec2 playerPosition{10.0, 20.0};
-glm::vec2 playerVelocity{20.0, 0.0};
+void Game::setup()
+{
 
-//void Game::setup()
-//{
-//	playerPosition = glm::vec2( 10.0, 20.0 );
-//	playerVelocity = glm::vec2( 1.0, 0.0 );
-//}
+}
 
 void Game::update()
 {
@@ -116,9 +116,6 @@ void Game::update()
 	double deltaTime = (SDL_GetTicks() - previousFrameTimeMS) / 1000.0;
 
 	previousFrameTimeMS = SDL_GetTicks();
-
-	playerPosition.x += playerVelocity.x * deltaTime;
-	playerPosition.y += playerVelocity.y * deltaTime;
 }
 void Game::render()
 {
@@ -137,8 +134,8 @@ void Game::render()
 	)};
 
 	SDL_Rect dstRect{
-		static_cast<int>(playerPosition.x), 
-		static_cast<int>(playerPosition.y), 
+		200, 
+		200, 
 		32, 
 		32
 	};

@@ -1,6 +1,8 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iomanip>
 #include <iostream>
 #include <format>
+#include <chrono>
 
 #include "Logger.h"
 
@@ -12,7 +14,7 @@ void Logger::Log(std::string_view message)
 	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
 
 	LogEntry log{ LogType::INFO };
-	log.message = std::format("LOG: [ {} ]", getLocalTimeString());
+	log.message = std::format("LOG: [ {} ] {}", getLocalTimeString(), message);
 
 	std::cout << log.message << "\n";
 	messages.push_back(log);
@@ -25,7 +27,7 @@ void Logger::Err(std::string_view message)
 	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
 
 	LogEntry log{ LogType::ERR };
-	log.message = std::format("ERR: [ {} ]", getLocalTimeString());
+	log.message = std::format("ERR: [ {} ] {}", getLocalTimeString(), message);
 
 	std::cerr << log.message << "\n";
 	messages.push_back(log);
@@ -33,17 +35,14 @@ void Logger::Err(std::string_view message)
 	SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE);
 }
 
+
+
 std::string Logger::getLocalTimeString(void)
 {
-	constexpr int bufferSize{ 100 };
-	char buffer[bufferSize];
+	char dstTime[100] = { 0 };
+	const auto timeStamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
-	auto result{ std::time(nullptr) };
-	std::tm localTime{};
+	std::strftime(dstTime, sizeof(dstTime), "%d/%m/%Y %H:%M:%S", std::localtime(&timeStamp));
 
-	localtime_s(&localTime, &result);
-
-	std::strftime(buffer, bufferSize, "%d/%m/%Y %H:%M:%S", static_cast<const std::tm*>(&localTime));
-
-	return std::string(buffer);
+	return std::string(dstTime);
 }
