@@ -7,8 +7,6 @@ protected:
 	static int nextID;
 };
 
-int BaseComponent::nextID = 0;
-
 template<typename T> class Component : public BaseComponent
 {
 	// Assigns a unique ID to a component type.
